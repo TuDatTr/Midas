@@ -74,7 +74,25 @@ def run_contract_analysis(contract: Dict, etherscan_key):
         print(f"Completed {contract} in {elapsed_time:.2f} seconds")
 
 
+def run_cargo_build_release():
+    try:
+        result = subprocess.run(
+            ["cargo", "build", "--release"],
+            cwd=os.getcwd(),
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+        )
+        return True, result.stdout
+    except subprocess.CalledProcessError as e:
+        return False, e.output
+    except Exception as e:
+        return False, str(e)
+
+
 def main():
+    run_cargo_build_release()
     load_dotenv()
     contract_dir = Path("_contracts/online/")
     contracts = get_contracts(contract_dir)
