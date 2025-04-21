@@ -1,0 +1,9 @@
+[patch.crates-io]
+native-tls = { version = "0.2.11" }
+parity-scale-codec = { version = "3.6.9" }
+parity-scale-codec-derive = { version = "3.6.9" }
+cargo-platform = { version = "0.1.8" }
+zerofrom = { version = "0.1.5" }
+litemap = { version = "0.7.4" }
+metatype = { version = "0.2.1" }
+serde_traitobject = { version = "0.2.8" }
