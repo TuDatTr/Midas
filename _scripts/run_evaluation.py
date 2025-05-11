@@ -19,7 +19,7 @@ def get_contracts(directory: Path):
                     contracts.append(
                         {
                             "address": line.split("/")[4].split("?")[0],
-                            "blocknum": "latest",
+                            "blocknum": "22320135",  # Latest as of 2025-04-21 23:57 GMT+2
                         }
                     )
     for file in directory.glob("**/defihacklabs_list.txt"):
@@ -50,10 +50,11 @@ def run_contract_analysis(contract: Dict, etherscan_key):
 
     command = f'timeout 60 \
         cargo run --release -- evm \
-        -t "{address}" \
+        --target "{address}" \
         -c eth \
-        -b "{blocknum}" \
+        --onchain-block-number "{blocknum}" \
         --work-dir "{contract_path}" \
+        -o \
         --onchain-etherscan-api-key "{etherscan_key}"'
     with open(contract_path / "command.txt", "w") as f:
         f.write(command)

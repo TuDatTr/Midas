@@ -27,6 +27,8 @@ use clap::Parser;
 use clap::Subcommand;
 
 use evm::{evm_main, EvmArgs};
+use tracing::Level;
+use tracing_subscriber::FmtSubscriber;
 
 #[derive(Parser)]
 #[command(author, version, about)]
@@ -41,6 +43,17 @@ enum Commands {
 }
 
 fn main() {
+    let subscriber_builder = FmtSubscriber::builder()
+        .compact()
+        .with_target(false)
+        .without_time();
+    #[cfg(debug_assertions)]
+    let subscriber = subscriber_builder.with_max_level(Level::DEBUG).finish();
+    #[cfg(not(debug_assertions))]
+    let subscriber = subscriber_builder.with_max_level(Level::INFO).finish();
+
+    tracing::subscriber::set_global_default(subscriber).expect("failed to initialize logger");
+
     let args = Cli::parse();
     match args.command {
         Commands::EVM(args) => {
