@@ -48,14 +48,27 @@ def run_contract_analysis(contract: Dict, etherscan_key):
     contract_path.mkdir(parents=True, exist_ok=True)
     output_file = contract_path / "output.txt"
 
+    # timeout 60
+    # cargo run --release
+    # -- evm
+    # -t "0x983EFCA0Fd5F9B03f75BbBD41F4BeD3eC20c96d8"
+    # -c eth
+    # -b "22126698"
+    # -u "http://192.168.122.253:8545/"
+    # -w "0x983EFCA0Fd5F9B03f75BbBD41F4BeD3eC20c96d8/"
+    # --run-forever
+    # -e "http://192.168.122.253:8545"
+    # --onchain-etherscan-api-key D8IX374FJNCA2UKF51XI9TYQA9TD8IKJGE
     command = f'timeout 60 \
         cargo run --release -- evm \
-        --target "{address}" \
+        -t "{address}" \
         -c eth \
-        --onchain-block-number "{blocknum}" \
-        --work-dir "{contract_path}" \
         -o \
+        --onchain-block-number "{blocknum}" \
+        --onchain-url "http://192.168.122.253:8545/" \
+        --work-dir "{contract_path}" \
         --onchain-etherscan-api-key "{etherscan_key}"'
+    # cargo run --release -- evm -t "0x983EFCA0Fd5F9B03f75BbBD41F4BeD3eC20c96d8" -c eth -o --onchain-block-number "22461918" --onchain-url "http://192.168.122.253:8545/" --work-dir "0x983EFCA0Fd5F9B03f75BbBD41F4BeD3eC20c96d8/"  --onchain-etherscan-api-key "D8IX374FJNCA2UKF51XI9TYQA9TD8IKJGE"
     with open(contract_path / "command.txt", "w") as f:
         f.write(command)
 
